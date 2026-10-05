@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bitácora Nutrición Deportiva 2026</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f2f7f4;
+      color: #26332c;
+      min-height: 100vh;
+    }
+
+    .contenedor {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .encabezado {
+      text-align: center;
+      padding: 18px 10px 22px;
+    }
+
+    .logo {
+      width: 105px;
+      height: 105px;
+      object-fit: contain;
+      margin-bottom: 12px;
+    }
+
+    .universidad {
+      color: #176b45;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    h1 {
+      color: #155f3d;
+      font-size: 24px;
+      line-height: 1.2;
+      margin-top: 8px;
+    }
+
+    .subtitulo {
+      color: #637169;
+      font-size: 14px;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .tarjeta {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.08);
+      margin-top: 10px;
+    }
+
+    .titulo-tarjeta {
+      font-size: 20px;
+      font-weight: bold;
+      color: #155f3d;
+      margin-bottom: 6px;
+    }
+
+    .texto-ayuda {
+      font-size: 13px;
+      color: #69756e;
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #334139;
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid #ccd8d1;
+      border-radius: 10px;
+      padding: 0 13px;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 16px;
+      background: #fbfdfc;
+    }
+
+    input:focus {
+      border-color: #218653;
+      box-shadow: 0 0 0 3px rgba(33,134,83,.10);
+    }
+
+    .boton {
+      width: 100%;
+      height: 50px;
+      border: none;
+      border-radius: 10px;
+      background: #176b45;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .boton:hover {
+      background: #125838;
+    }
+
+    .boton:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .mensaje {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 14px;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .mensaje.error {
+      display: block;
+      background: #fdecec;
+      color: #a12828;
+      border: 1px solid #f3caca;
+    }
+
+    .mensaje.info {
+      display: block;
+      background: #edf7f1;
+      color: #176b45;
+      border: 1px solid #cce7d7;
+    }
+
+    .pie {
+      text-align: center;
+      color: #7a857e;
+      font-size: 12px;
+      margin-top: 22px;
+      line-height: 1.5;
+    }
+
+    .oculto {
+      display: none !important;
+    }
+
+    /* PANEL DEL ESTUDIANTE */
+
+    .bienvenida {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .bienvenida h2 {
+      color: #155f3d;
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .codigo-estudiante {
+      color: #68746d;
+      font-size: 13px;
+    }
+
+    .opciones {
+      display: grid;
+      gap: 12px;
+    }
+
+    .opcion {
+      background: #f5faf7;
+      border: 1px solid #d7e7dd;
+      border-radius: 12px;
+      padding: 17px;
+      cursor: pointer;
+    }
+
+    .opcion strong {
+      display: block;
+      color: #155f3d;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    .opcion span {
+      font-size: 13px;
+      color: #6a756f;
+    }
+
+    .cerrar {
+      margin-top: 15px;
+      background: white;
+      color: #176b45;
+      border: 1px solid #176b45;
+    }
+
+    .registro {
+      border-left: 4px solid #176b45;
+      background: #f8fbf9;
+      padding: 13px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+    }
+
+    .registro-fecha {
+      font-size: 12px;
+      color: #6a756f;
+      margin-bottom: 6px;
+    }
+
+    .registro-actividad {
+      font-weight: bold;
+      color: #245c43;
+      margin-bottom: 5px;
+    }
+
+    .registro-descripcion {
+      font-size: 13px;
+      line-height: 1.45;
+      color: #46534b;
+    }
+
+    .editar {
+      margin-top: 9px;
+      padding: 7px 11px;
+      border: 1px solid #176b45;
+      border-radius: 7px;
+      background: white;
+      color: #176b45;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .seccion-titulo {
+      color: #155f3d;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <!-- ENCABEZADO -->
+  <header class="encabezado">
+    <img src="logo.png" class="logo" alt="Universidad Nacional Ecológica">
+
+    <div class="universidad">
+      Universidad Nacional Ecológica
+    </div>
+
+    <h1>Bitácora Académica</h1>
+
+    <div class="subtitulo">
+      Internado Rotatorio de Nutrición Deportiva
+    </div>
+  </header>
+
+
+  <!-- LOGIN -->
+  <section id="pantallaLogin" class="tarjeta">
+
+    <div class="titulo-tarjeta">
+      Ingreso del estudiante
+    </div>
+
+    <p class="texto-ayuda">
+      Ingresa tu código de estudiante y tu PIN para acceder a tu bitácora académica.
+    </p>
+
+    <form id="formLogin">
+
+      <label for="codigo">
+        Código de estudiante
+      </label>
+
+      <input
+        type="text"
+        id="codigo"
+        placeholder="Ej. 47205"
+        inputmode="numeric"
+        autocomplete="username"
+        required
+      >
+
+      <label for="pin">
+        PIN
+      </label>
+
+      <input
+        type="password"
+        id="pin"
+        placeholder="Ingresa tu PIN"
+        inputmode="numeric"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" class="boton" id="btnIngresar">
+        INGRESAR
+      </button>
+
+    </form>
+
+    <div id="mensajeLogin" class="mensaje"></div>
+
+  </section>
+
+
+  <!-- PANEL DEL ESTUDIANTE -->
+  <section id="pantallaEstudiante" class="tarjeta oculto">
+
+    <div class="bienvenida">
+      <h2 id="nombreEstudiante">
+        Bienvenido/a
+      </h2>
+
+      <div class="codigo-estudiante" id="codigoEstudiante"></div>
+    </div>
+
+
+    <div class="opciones">
+
+      <div class="opcion" onclick="mostrarActividades()">
+        <strong>📋 Mis actividades</strong>
+        <span>Consulta los registros realizados en tu internado.</span>
+      </div>
+
+      <div class="opcion" onclick="mostrarProximamente()">
+        <strong>➕ Registrar actividad</strong>
+        <span>Registra lo realizado durante tu jornada práctica.</span>
+      </div>
+
+      <div class="opcion" onclick="mostrarProximamente()">
+        <strong>🏫 Datos de mi práctica</strong>
+        <span>Consulta los datos generales de tu internado.</span>
+      </div>
+
+    </div>
+
+    <button class="boton cerrar" onclick="cerrarSesion()">
+      CERRAR SESIÓN
+    </button>
+
+  </section>
+
+
+  <!-- ACTIVIDADES -->
+  <section id="pantallaActividades" class="tarjeta oculto">
+
+    <h2 class="seccion-titulo">
+      Mis actividades
+    </h2>
+
+    <div id="listaActividades"></div>
+
+    <button class="boton cerrar" onclick="volverPanel()">
+      VOLVER
+    </button>
+
+  </section>
+
+
+  <div class="pie">
+    Carrera de Nutrición y Dietética<br>
+    Universidad Nacional Ecológica · 2026
+  </div>
+
+</div>
+
+
+<script>
+
+  // =====================================================
+  // DIRECCIÓN DEL SERVIDOR
+  // =====================================================
+
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbyzy6hRAQTGsLUgDVGhPGEbPyMGMg0HDNVGh21WycjPjIQEz-d-h7TO2A4WEItN7l09/exec";
+
+
+  let estudianteActual = null;
+  let practicaActual = null;
+  let actividadesActuales = [];
+
+
+  // =====================================================
+  // LOGIN
+  // =====================================================
+
+  document.getElementById("formLogin").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const codigo = document.getElementById("codigo").value.trim();
+    const pin = document.getElementById("pin").value.trim();
+
+    if (!codigo || !pin) {
+      mostrarMensaje("Completa tu código y PIN.", "error");
+      return;
+    }
+
+    const boton = document.getElementById("btnIngresar");
+
+    boton.disabled = true;
+    boton.textContent = "VERIFICANDO...";
+
+    mostrarMensaje("Verificando datos...", "info");
+
+    const callbackName =
+      "loginCallback_" + Date.now();
+
+    window[callbackName] = function(respuesta) {
+
+      try {
+
+        if (!respuesta || !respuesta.ok) {
+
+          mostrarMensaje(
+            respuesta && respuesta.mensaje
+              ? respuesta.mensaje
+              : "Código o PIN incorrecto.",
+            "error"
+          );
+
+          return;
+        }
+
+        estudianteActual = respuesta.estudiante;
+        practicaActual = respuesta.practica;
+        actividadesActuales = respuesta.actividades || [];
+
+        document.getElementById("nombreEstudiante").textContent =
+          estudianteActual.nombre;
+
+        document.getElementById("codigoEstudiante").textContent =
+          "Código: " + estudianteActual.codigo;
+
+        document.getElementById("pantallaLogin")
+          .classList.add("oculto");
+
+        document.getElementById("pantallaEstudiante")
+          .classList.remove("oculto");
+
+        document.getElementById("mensajeLogin").style.display = "none";
+
+      } catch(error) {
+
+        mostrarMensaje(
+          "Ocurrió un problema al iniciar sesión.",
+          "error"
+        );
+
+      } finally {
+
+        boton.disabled = false;
+        boton.textContent = "INGRESAR";
+
+      }
+
+      delete window[callbackName];
+      const script = document.getElementById(callbackName);
+      if (script) script.remove();
+    };
+
+
+    const script = document.createElement("script");
+
+    script.id = callbackName;
+
+    script.src =
+      API_URL +
+      "?accion=login" +
+      "&codigo=" + encodeURIComponent(codigo) +
+      "&pin=" + encodeURIComponent(pin) +
+      "&callback=" + callbackName;
+
+    script.onerror = function() {
+
+      mostrarMensaje(
+        "No fue posible conectar con el servidor.",
+        "error"
+      );
+
+      boton.disabled = false;
+      boton.textContent = "INGRESAR";
+
+      delete window[callbackName];
+      script.remove();
+    };
+
+    document.body.appendChild(script);
+
+  });
+
+
+  // =====================================================
+  // MOSTRAR ACTIVIDADES
+  // =====================================================
+
+  function mostrarActividades() {
+
+    document.getElementById("pantallaEstudiante")
+      .classList.add("oculto");
+
+    document.getElementById("pantallaActividades")
+      .classList.remove("oculto");
+
+    const contenedor =
+      document.getElementById("listaActividades");
+
+    if (!actividadesActuales.length) {
+
+      contenedor.innerHTML = `
+        <div class="texto-ayuda">
+          Todavía no tienes actividades registradas.
+        </div>
+      `;
+
+      return;
+    }
+
+    contenedor.innerHTML =
+      actividadesActuales.map(function(item) {
+
+        return `
+          <div class="registro">
+
+            <div class="registro-fecha">
+              ${item.fecha} · ${item.hora}
+            </div>
+
+            <div class="registro-actividad">
+              ${escaparHTML(item.actividad)}
+            </div>
+
+            <div class="registro-descripcion">
+              ${escaparHTML(item.descripcion || "")}
+            </div>
+
+            ${
+              item.puedeEditar
+              ? `<button
+                    class="editar"
+                    onclick="editarActividad(${item.fila})">
+                    ✏️ Editar
+                 </button>`
+              : ""
+            }
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
+
+  // =====================================================
+  // VOLVER AL PANEL
+  // =====================================================
+
+  function volverPanel() {
+
+    document.getElementById("pantallaActividades")
+      .classList.add("oculto");
+
+    document.getElementById("pantallaEstudiante")
+      .classList.remove("oculto");
+
+  }
+
+
+  // =====================================================
+  // CERRAR SESIÓN
+  // =====================================================
+
+  function cerrarSesion() {
+
+    estudianteActual = null;
+    practicaActual = null;
+    actividadesActuales = [];
+
+    document.getElementById("codigo").value = "";
+    document.getElementById("pin").value = "";
+
+    document.getElementById("pantallaEstudiante")
+      .classList.add("oculto");
+
+    document.getElementById("pantallaActividades")
+      .classList.add("oculto");
+
+    document.getElementById("pantallaLogin")
+      .classList.remove("oculto");
+
+  }
+
+
+  // =====================================================
+  // MENSAJES
+  // =====================================================
+
+  function mostrarMensaje(texto, tipo) {
+
+    const elemento =
+      document.getElementById("mensajeLogin");
+
+    elemento.textContent = texto;
+
+    elemento.className =
+      "mensaje " + tipo;
+
+  }
+
+
+  // =====================================================
+  // PRÓXIMAMENTE
+  // =====================================================
+
+  function mostrarProximamente() {
+
+    alert(
+      "Esta sección la activaremos en el siguiente paso."
+    );
+
+  }
+
+
+  // =====================================================
+  // EDITAR — PREPARADO PARA EL SIGUIENTE PASO
+  // =====================================================
+
+  function editarActividad(fila) {
+
+    alert(
+      "La edición de actividades la activaremos en el siguiente paso."
+    );
+
+  }
+
+
+  // =====================================================
+  // SEGURIDAD BÁSICA DE TEXTO
+  // =====================================================
+
+  function escaparHTML(texto) {
+
+    const div = document.createElement("div");
+
+    div.textContent =
+      texto === null || texto === undefined
+        ? ""
+        : String(texto);
+
+    return div.innerHTML;
+
+  }
+
+</script>
+
+</body>
+</html>
