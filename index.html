@@ -348,7 +348,7 @@
         <span>Consulta los registros realizados en tu internado.</span>
       </div>
 
-      <div class="opcion" onclick="mostrarProximamente()">
+      <div class="opcion" onclick="mostrarFormularioActividad()">
         <strong>➕ Registrar actividad</strong>
         <span>Registra lo realizado durante tu jornada práctica.</span>
       </div>
@@ -381,7 +381,82 @@
     </button>
 
   </section>
+<!-- REGISTRAR ACTIVIDAD -->
+<section id="pantallaRegistro" class="tarjeta oculto">
 
+  <h2 class="seccion-titulo">
+    Registrar actividad
+  </h2>
+
+  <label for="actividad">
+    Actividad realizada
+  </label>
+  <input
+    type="text"
+    id="actividad"
+    placeholder="Ej.: Evaluación nutricional"
+  >
+
+  <label for="conQuien">
+    ¿Con quién?
+  </label>
+  <input
+    type="text"
+    id="conQuien"
+    placeholder="Ej.: Deportista, entrenador, equipo"
+  >
+
+  <label for="codigoCaso">
+    Código de caso
+  </label>
+  <input
+    type="text"
+    id="codigoCaso"
+    placeholder="Si corresponde"
+  >
+
+  <label for="descripcion">
+    Descripción de la actividad
+  </label>
+  <textarea
+    id="descripcion"
+    rows="4"
+    placeholder="Describe brevemente lo realizado"
+  ></textarea>
+
+  <label for="aprendizaje">
+    ¿Qué aprendí?
+  </label>
+  <textarea
+    id="aprendizaje"
+    rows="4"
+    placeholder="Escribe los principales aprendizajes"
+  ></textarea>
+
+  <label for="observaciones">
+    Observaciones
+  </label>
+  <textarea
+    id="observaciones"
+    rows="3"
+    placeholder="Observaciones adicionales"
+  ></textarea>
+
+  <button
+    class="boton"
+    onclick="guardarNuevaActividad()"
+  >
+    💾 GUARDAR ACTIVIDAD
+  </button>
+
+  <button
+    class="boton cerrar"
+    onclick="volverPanel()"
+  >
+    VOLVER
+  </button>
+
+</section>
 
   <div class="pie">
     Carrera de Nutrición y Dietética<br>
@@ -404,7 +479,7 @@
   let estudianteActual = null;
   let practicaActual = null;
   let actividadesActuales = [];
-
+let pinActual = "";
 
   // =====================================================
   // LOGIN
@@ -447,7 +522,7 @@
 
           return;
         }
-
+pinActual = pin;
         estudianteActual = respuesta.estudiante;
         practicaActual = respuesta.practica;
         actividadesActuales = respuesta.actividades || [];
@@ -577,21 +652,158 @@
 
   }
 
+// MOSTRAR FORMULARIO DE REGISTRO
+function mostrarFormularioActividad() {
 
+  document.getElementById("pantallaEstudiante")
+    .classList.add("oculto");
+
+  document.getElementById("pantallaActividades")
+    .classList.add("oculto");
+
+  document.getElementById("pantallaRegistro")
+    .classList.remove("oculto");
+}
   // =====================================================
   // VOLVER AL PANEL
   // =====================================================
+// GUARDAR NUEVA ACTIVIDAD
+async function guardarNuevaActividad() {
+// RECARGAR ACTIVIDADES DEL ESTUDIANTE
 
-  function volverPanel() {
+  const actividad = document.getElementById("actividad").value.trim();
+  const conQuien = document.getElementById("conQuien").value.trim();
+  const codigoCaso = document.getElementById("codigoCaso").value.trim();
+  const descripcion = document.getElementById("descripcion").value.trim();
+  const aprendizaje = document.getElementById("aprendizaje").value.trim();
+  const observaciones = document.getElementById("observaciones").value.trim();
 
-    document.getElementById("pantallaActividades")
-      .classList.add("oculto");
-
-    document.getElementById("pantallaEstudiante")
-      .classList.remove("oculto");
-
+  if (!actividad) {
+    alert("Por favor, escribe la actividad realizada.");
+    return;
   }
 
+  if (!descripcion) {
+    alert("Por favor, completa la descripción de la actividad.");
+    return;
+  }
+
+  if (!aprendizaje) {
+    alert("Por favor, indica qué aprendiste.");
+    return;
+  }
+
+  if (!estudianteActual || !estudianteActual.codigo) {
+    alert("La sesión del estudiante no está disponible. Ingresa nuevamente.");
+    return;
+  }
+
+  const datos = {
+    accion: "guardar_actividad",
+    codigo: estudianteActual.codigo,
+    pin: pinActual,
+    actividad: actividad,
+    conQuien: conQuien,
+    codigoCaso: codigoCaso,
+    descripcion: descripcion,
+    aprendizaje: aprendizaje,
+    observaciones: observaciones
+  };
+
+  try {
+
+ await fetch(API_URL, {
+  method: "POST",
+  mode: "no-cors",
+  headers: {
+    "Content-Type": "text/plain;charset=UTF-8"
+  },
+  body: JSON.stringify(datos)
+});
+
+alert("Actividad registrada correctamente.");
+
+setTimeout(function() {
+  recargarActividades();
+}, 800);
+
+    alert("Actividad registrada correctamente.");
+
+    // Limpiar formulario
+    document.getElementById("actividad").value = "";
+    document.getElementById("conQuien").value = "";
+    document.getElementById("codigoCaso").value = "";
+    document.getElementById("descripcion").value = "";
+    document.getElementById("aprendizaje").value = "";
+    document.getElementById("observaciones").value = "";
+
+    // Volver a cargar las actividades
+   recargarActividades();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "La actividad fue enviada, pero no se pudo confirmar la respuesta del servidor."
+    );
+  }
+}
+  function recargarActividades() {
+
+  const callback = "actualizarActividades_" + Date.now();
+
+  window[callback] = function(respuesta) {
+
+    if (respuesta.ok) {
+
+      actividadesActuales = respuesta.actividades || [];
+
+      delete window[callback];
+
+      mostrarActividades();
+
+    } else {
+
+      delete window[callback];
+
+      alert(
+        respuesta.mensaje ||
+        "No se pudieron cargar las actividades."
+      );
+    }
+  };
+
+  const script = document.createElement("script");
+
+  script.src =
+    API_URL +
+    "?accion=actividades" +
+    "&codigo=" + encodeURIComponent(estudianteActual.codigo) +
+    "&pin=" + encodeURIComponent(pinActual) +
+    "&callback=" + encodeURIComponent(callback);
+
+  script.onerror = function() {
+
+    delete window[callback];
+
+    alert("No se pudieron actualizar las actividades.");
+  };
+
+  document.body.appendChild(script);
+}
+  function volverPanel() {
+
+  document.getElementById("pantallaActividades")
+    .classList.add("oculto");
+
+  document.getElementById("pantallaRegistro")
+    .classList.add("oculto");
+
+  document.getElementById("pantallaEstudiante")
+    .classList.remove("oculto");
+
+}
 
   // =====================================================
   // CERRAR SESIÓN
